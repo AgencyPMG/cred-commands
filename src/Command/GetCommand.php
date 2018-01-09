@@ -41,11 +41,14 @@ The <info>%command.name%</info> command fetches a single paramter from the AWS S
 Parameter store. A common use case for this would be to fetch a
 credential into an environment variable before running the application.
 
+The follow is an example of how that might work in something like a
+docker entrypoint.
+
     #!/bin/bash
     export SOME_CRED="$(%command.full_name% some_cred)"
     # other creds here probably
 
-    exec /path/to/the/app
+    exec "$@"
 END
         );
     }
