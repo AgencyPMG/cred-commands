@@ -13,32 +13,19 @@
 
 namespace PMG\CredCommands\Command;
 
-use Aws\Ssm\SsmClient;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
-use PMG\CredCommands\CredentialNameFormatter;
-use PMG\CredCommands\Formatter\NullFormatter;
+use PMG\CredCommands\CredentialClient;
 
 abstract class Command extends SymfonyCommand
 {
     /**
-     * @var SsmClient
+     * @var CredentialClient
      */
-    protected $ssm;
+    protected $client;
 
-    /**
-     * @var CredentialNameFormatter
-     */
-    private $formatter;
-
-    public function __construct(SsmClient $ssm, ?CredentialNameFormatter $formatter=null)
+    public function __construct(CredentialClient $client)
     {
         parent::__construct();
-        $this->ssm = $ssm;
-        $this->formatter = $formatter ?? new NullFormatter();
-    }
-
-    protected function format(string $credential) : string
-    {
-        return $this->formatter->format($credential);
+        $this->client = $client;
     }
 }
