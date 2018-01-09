@@ -32,8 +32,8 @@ class RemoveCommandTest extends CommandTestCase
         );
     }
 
-    protected function createCommand() : Command
+    protected function getCommandName() : string
     {
-        return new RemoveCommand($this->client);
+        return 'remove';
     }
 }

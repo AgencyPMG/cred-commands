@@ -13,36 +13,36 @@
 
 namespace PMG\CredCommands\Command;
 
+use PMG\CredCommands\Application;
 use PMG\CredCommands\CredentialClient;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 abstract class CommandTestCase extends \PMG\CredCommands\TestCase
 {
     const CREDENTIAL = 'testcredname';
 
-    protected $client, $command, $app;
+    protected $client, $app;
 
     protected function setUp()
     {
         $this->client = $this->createMock(CredentialClient::class);
-        $this->command = $this->createCommand();
-        $this->app = new Application();
-        $this->app->add($this->command);
+        $this->app = new Application($this->client);
     }
 
-    abstract protected function createCommand() : Command;
+    abstract protected function getCommandName() : string;
 
     protected function createTester() : CommandTester
     {
-        return new CommandTester($this->app->find($this->command->getName()));
+        return new CommandTester($this->app->find(Command::prefixName(
+            $this->getCommandName()
+        )));
     }
 
     protected function executeCommand(array $args, array $options=[])
     {
         $tester = $this->createTester();
         $statusCode = $tester->execute(array_replace([
-            'command' => $this->command->getName(),
+            'command' => Command::prefixName($this->getCommandName()),
         ], $args), $options);
 
         return [$tester, $statusCode];

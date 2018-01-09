@@ -30,8 +30,8 @@ class GetCommandTest extends CommandTestCase
         $this->assertEquals('testing123', $tester->getDisplay());
     }
 
-    protected function createCommand() : Command
+    protected function getCommandName() : string
     {
-        return new GetCommand($this->client);
+        return 'get';
     }
 }

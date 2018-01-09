@@ -34,8 +34,8 @@ class PutCommandTest extends CommandTestCase
         );
     }
 
-    protected function createCommand() : Command
+    protected function getCommandName() : string
     {
-        return new PutCommand($this->client);
+        return 'put';
     }
 }
