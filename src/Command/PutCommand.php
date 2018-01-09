@@ -29,7 +29,7 @@ final class PutCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('creds:put');
+        $this->setName(self::prefixName('put'));
         $this->setDescription('Put a credential into the parameter store');
         $this->addArgument(
             'credential',

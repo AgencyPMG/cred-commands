@@ -29,7 +29,7 @@ final class GetCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('creds:get');
+        $this->setName(self::prefixName('get'));
         $this->setDescription('Get a credential from the parameter store');
         $this->addArgument(
             'credential',

@@ -29,8 +29,8 @@ final class RemoveCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('creds:remove');
-        $this->setAliases(['creds:rm']);
+        $this->setName(self::prefixName('remove'));
+        $this->setAliases([self::prefixName('rm')]);
         $this->setDescription('Remove a credential from the parameter store');
         $this->addArgument(
             'credential',

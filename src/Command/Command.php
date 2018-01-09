@@ -28,4 +28,9 @@ abstract class Command extends SymfonyCommand
         parent::__construct();
         $this->client = $client;
     }
+
+    public static function prefixName(string $name) : string
+    {
+        return sprintf('creds:%s', $name);
+    }
 }
