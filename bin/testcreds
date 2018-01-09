@@ -1,0 +1,38 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * This file is part of pmg/cred-commands
+ *
+ * Copyright (c) PMG <https://www.pmg.com>
+ *
+ * For full copyright information see the LICENSE file distributed
+ * with this source code.
+ *
+ * @license http://opensource.org/licenses/MIT MIT
+ */
+
+use Aws\Ssm\SsmClient;
+use PMG\CredCommands\Application;
+use PMG\CredCommands\CredentialClient;
+use PMG\CredCommands\Formatter\AppEnvFormatter;
+
+require __DIR__.'/../vendor/autoload.php';
+
+$keyId = getenv('CREDCOMMANDS_KEY_ID');
+if (!$keyId) {
+    fprintf(STDERR, 'No `CREDCOMMANDS_KEY_ID` in the environment, cannot continue.%s', PHP_EOL);
+    exit(1);
+}
+
+$ssm = SsmClient::factory([
+    'version' => 'latest',
+    'region' => getenv('AWS_DEFAULT_REGION') ?: 'us-east-1',
+]);
+$app = new Application(new CredentialClient(
+    $ssm,
+    new AppEnvFormatter('credcommands', 'test'),
+    $keyId
+));
+
+$app->run();
