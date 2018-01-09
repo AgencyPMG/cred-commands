@@ -73,7 +73,7 @@ $app->run();
 ## Custom Credential Name Formatting
 
 By default all credential names passed to the CLI are used directly, but that
-can be changed with a `NameFormatter` implementation.
+can be changed with a `CredentialNameFormatter` implementation.
 
 There a few provided by default, all in the `PMG\CredCommands\Formatter`
 namespace.
