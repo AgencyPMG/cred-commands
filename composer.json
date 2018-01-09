@@ -1,0 +1,25 @@
+{
+    "name": "pmg/cred-commands",
+    "description": "Symfony console commands to interact with the AWS SSM Paramter Store",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "~7.1",
+        "symfony/console": "~3.4|~4.0",
+        "aws/aws-sdk-php": "~3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~6.5",
+        "symfony/phpunit-bridge": "~3.4|~4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PMG\\CredCommands\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PMG\\CredCommands\\": "test/"
+        }
+    }
+}
