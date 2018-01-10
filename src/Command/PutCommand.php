@@ -24,12 +24,13 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class PutCommand extends Command
 {
+    protected static $defaultName = 'creds:put';
+
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $this->setName(self::prefixName('put'));
         $this->setDescription('Put a credential into the parameter store');
         $this->addArgument(
             'credential',

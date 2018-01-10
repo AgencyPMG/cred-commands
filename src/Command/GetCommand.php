@@ -24,12 +24,13 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class GetCommand extends Command
 {
+    protected static $defaultName = 'creds:get';
+
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $this->setName(self::prefixName('get'));
         $this->setDescription('Get a credential from the parameter store');
         $this->addArgument(
             'credential',

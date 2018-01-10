@@ -33,16 +33,14 @@ abstract class CommandTestCase extends \PMG\CredCommands\TestCase
 
     protected function createTester() : CommandTester
     {
-        return new CommandTester($this->app->find(Command::prefixName(
-            $this->getCommandName()
-        )));
+        return new CommandTester($this->app->find($this->getCommandName()));
     }
 
     protected function executeCommand(array $args, array $options=[])
     {
         $tester = $this->createTester();
         $statusCode = $tester->execute(array_replace([
-            'command' => Command::prefixName($this->getCommandName()),
+            'command' => $this->getCommandName(),
         ], $args), $options);
 
         return [$tester, $statusCode];

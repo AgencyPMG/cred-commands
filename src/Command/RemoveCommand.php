@@ -24,13 +24,13 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class RemoveCommand extends Command
 {
+    protected static $defaultName = 'creds:remove';
+
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $this->setName(self::prefixName('remove'));
-        $this->setAliases([self::prefixName('rm')]);
         $this->setDescription('Remove a credential from the parameter store');
         $this->addArgument(
             'credential',
