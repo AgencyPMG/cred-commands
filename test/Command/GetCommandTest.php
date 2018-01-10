@@ -32,6 +32,6 @@ class GetCommandTest extends CommandTestCase
 
     protected function getCommandName() : string
     {
-        return 'get';
+        return GetCommand::getDefaultName();
     }
 }

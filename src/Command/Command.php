@@ -23,14 +23,9 @@ abstract class Command extends SymfonyCommand
      */
     protected $client;
 
-    public function __construct(CredentialClient $client)
+    public function __construct(CredentialClient $client, ?string $name=null)
     {
-        parent::__construct();
+        parent::__construct($name);
         $this->client = $client;
-    }
-
-    public static function prefixName(string $name) : string
-    {
-        return sprintf('creds:%s', $name);
     }
 }

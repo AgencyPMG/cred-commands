@@ -34,6 +34,6 @@ class RemoveCommandTest extends CommandTestCase
 
     protected function getCommandName() : string
     {
-        return 'remove';
+        return RemoveCommand::getDefaultName();
     }
 }

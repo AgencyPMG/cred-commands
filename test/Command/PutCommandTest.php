@@ -36,6 +36,6 @@ class PutCommandTest extends CommandTestCase
 
     protected function getCommandName() : string
     {
-        return 'put';
+        return PutCommand::getDefaultName();
     }
 }
