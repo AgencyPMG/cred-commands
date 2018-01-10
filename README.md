@@ -71,7 +71,7 @@ $app->run();
 ### CLI Usage
 
 ```
-./bin/console creds:{get,put,rm,remove}
+./bin/console creds:{get,put,remove}
 ```
 
 ## Custom Credential Name Formatting
