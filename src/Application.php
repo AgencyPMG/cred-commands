@@ -27,6 +27,7 @@ final class Application extends SymfonyApplication
         parent::__construct($name, $version);
         $this->addCommands([
             new Command\GetCommand($client),
+            new Command\MultiGetCommand($client),
             new Command\PutCommand($client),
             new Command\RemoveCommand($client),
         ]);
