@@ -32,6 +32,27 @@ class RemoveCommandTest extends CommandTestCase
         );
     }
 
+    public function testMultipleCredentialsCanBeRemovedFromTheParameterStorage()
+    {
+        $this->client->expects($this->once())
+            ->method('remove')
+            ->with(self::CREDENTIAL, 'another_cred');
+
+        [$tester, $status] = $this->executeCommand([
+            'credential' => [self::CREDENTIAL, 'another_cred'],
+        ]);
+
+        $this->assertSame(0, $status);
+        $this->assertContains(
+            sprintf('removed %s', self::CREDENTIAL),
+            $tester->getDisplay()
+        );
+        $this->assertContains(
+            sprintf('removed %s', 'another_cred'),
+            $tester->getDisplay()
+        );
+    }
+
     protected function getCommandName() : string
     {
         return RemoveCommand::getDefaultName();

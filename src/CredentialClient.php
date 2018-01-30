@@ -15,6 +15,7 @@ namespace PMG\CredCommands;
 
 use Aws\Ssm\SsmClient;
 use Aws\Ssm\Exception\SsmException;
+use PMG\CredCommands\Exception\InvalidParameters;
 use PMG\CredCommands\Formatter\NullFormatter;
 
 /**
@@ -72,6 +73,43 @@ class CredentialClient
     }
 
     /**
+     * Fetch multiple credentials.
+     *
+     * @param $credential At least one credential is required.
+     * @param $credentials additional credentials to look up.
+     * @throws InvalidParameters if any invalid parameters come back
+     * @return An array of strings with the credentil names as key.
+     */
+    public function getMultiple(string $credential, string ...$credentials) : array
+    {
+        array_unshift($credentials, $credential);
+        $keys = [];
+        foreach ($credentials as $c) {
+            $keys[$this->format($c)] = $c;
+        }
+
+        $result = $this->ssm->getParameters([
+            'Names' => array_keys($keys),
+            'WithDecryption' => true,
+        ]);
+
+        if (!empty($result['InvalidParameters'])) {
+            throw new InvalidParameters(sprintf(
+                'Invalid Parameters: %s',
+                implode(', ', $result['InvalidParameters'])
+            ));
+        }
+
+        $out = [];
+        foreach ($result['Parameters'] as $param) {
+            $origName = $keys[$param['Name']];
+            $out[$origName] = $param['Value'];
+        }
+
+        return $out;
+    }
+
+    /**
      * Put the credential into the paramter.
      *
      * @param $credential the credential name
@@ -99,11 +137,13 @@ class CredentialClient
      * Remove a credential from the parameter store.
      *
      * @param $credential the credential name
+     * @param $credentials additional credentials to remove
      */
-    public function remove(string $credential) : void
+    public function remove(string $credential, string ...$credentials) : void
     {
-        $this->ssm->deleteParameter([
-            'Name' => $this->format($credential),
+        array_unshift($credentials, $credential);
+        $this->ssm->deleteParameters([
+            'Names' => array_map([$this, 'format'], $credentials),
         ]);
     }
 

@@ -34,14 +34,18 @@ final class RemoveCommand extends Command
         $this->setDescription('Remove a credential from the parameter store');
         $this->addArgument(
             'credential',
-            InputArgument::REQUIRED,
+            InputArgument::REQUIRED | InputArgument::IS_ARRAY,
             'The credential to remove'
         );
         $this->setHelp(<<<END
-The <info>%command.name%</info> command removes a single paramter from the AWS SSM
-Parameter store.
+The <info>%command.name%</info> command removes one or more paramters from the
+AWS SSM Parameter store.
 
     %command.full_name% some_cred
+
+Or with multiple creds.
+
+    %command.full_name% one_more_cred another_cred
 END
         );
     }
@@ -51,8 +55,11 @@ END
      */
     protected function execute(InputInterface $in, OutputInterface $out)
     {
-        $cred = $this->client->remove($in->getArgument('credential'));
+        $toRemove = (array) $in->getArgument('credential');
+        $cred = $this->client->remove(...$toRemove);
 
-        $out->writeln(sprintf('removed %s', $in->getArgument('credential')));
+        foreach ($toRemove as $c) {
+            $out->writeln(sprintf('removed %s', $c));
+        }
     }
 }
