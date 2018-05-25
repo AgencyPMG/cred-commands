@@ -26,7 +26,7 @@ use PMG\CredCommands\Formatter\NullFormatter;
  */
 class CredentialClient
 {
-    const MAX_SIZE = 10;
+    const MAX_NAMES = 10;
 
     /**
      * @var SsmClient
@@ -91,7 +91,7 @@ class CredentialClient
         }
 
         $params = [];
-        foreach (array_chunk(array_keys($keys), self::MAX_SIZE) as $names) {
+        foreach (array_chunk(array_keys($keys), self::MAX_NAMES) as $names) {
             $result = $this->ssm->getParameters([
                 'Names' => $names,
                 'WithDecryption' => true,
@@ -149,7 +149,7 @@ class CredentialClient
     public function remove(string $credential, string ...$credentials) : void
     {
         array_unshift($credentials, $credential);
-        foreach (array_chunk(array_map([$this, 'format'], $credentials), self::MAX_SIZE) as $names) {
+        foreach (array_chunk(array_map([$this, 'format'], $credentials), self::MAX_NAMES) as $names) {
             $this->ssm->deleteParameters([
                 'Names' => $names,
             ]);
