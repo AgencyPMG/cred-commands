@@ -26,6 +26,8 @@ use PMG\CredCommands\Formatter\NullFormatter;
  */
 class CredentialClient
 {
+    const MAX_NAMES = 10;
+
     /**
      * @var SsmClient
      */
@@ -88,20 +90,25 @@ class CredentialClient
             $keys[$this->format($c)] = $c;
         }
 
-        $result = $this->ssm->getParameters([
-            'Names' => array_keys($keys),
-            'WithDecryption' => true,
-        ]);
+        $params = [];
+        foreach (array_chunk(array_keys($keys), self::MAX_NAMES) as $names) {
+            $result = $this->ssm->getParameters([
+                'Names' => $names,
+                'WithDecryption' => true,
+            ]);
 
-        if (!empty($result['InvalidParameters'])) {
-            throw new InvalidParameters(sprintf(
-                'Invalid Parameters: %s',
-                implode(', ', $result['InvalidParameters'])
-            ));
+            if (!empty($result['InvalidParameters'])) {
+                throw new InvalidParameters(sprintf(
+                    'Invalid Parameters: %s',
+                    implode(', ', $result['InvalidParameters'])
+                ));
+            }
+
+            $params[] = $result['Parameters'] ?: [];
         }
 
         $out = [];
-        foreach ($result['Parameters'] as $param) {
+        foreach (array_merge(...$params) as $param) {
             $origName = $keys[$param['Name']];
             $out[$origName] = $param['Value'];
         }
@@ -142,9 +149,11 @@ class CredentialClient
     public function remove(string $credential, string ...$credentials) : void
     {
         array_unshift($credentials, $credential);
-        $this->ssm->deleteParameters([
-            'Names' => array_map([$this, 'format'], $credentials),
-        ]);
+        foreach (array_chunk(array_map([$this, 'format'], $credentials), self::MAX_NAMES) as $names) {
+            $this->ssm->deleteParameters([
+                'Names' => $names,
+            ]);
+        }
     }
 
     private function format(string $credential) : string
