@@ -63,6 +63,26 @@ class CredentialClientTest extends TestCase
         $this->client->remove(self::PARAM, self::PARAM.'_again');
     }
 
+    /**
+     * @group https://github.com/AgencyPMG/cred-commands/issues/3
+     */
+    public function testMoreThanTenParametersCanBeRecievedAndRemoved()
+    {
+        $names = [];
+        $value = bin2hex(random_bytes(4));
+        foreach(range(1, 15) as $i) {
+            $names[] = $name = self::PARAM.'_multi_'.$i;
+            $this->client->put($name, $value);
+        }
+
+        $creds = $this->client->getMultiple(...$names);
+
+        $this->assertCount(15, $creds);
+        $this->assertEquals(array_fill_keys($names, $value), $creds);
+
+        $this->client->remove(...$names);
+    }
+
     public function testGettingMultipleParametersWithInvalidParamsCausesError()
     {
         $this->expectException(InvalidParameters::class);
