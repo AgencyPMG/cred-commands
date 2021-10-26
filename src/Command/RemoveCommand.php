@@ -29,7 +29,7 @@ final class RemoveCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Remove a credential from the parameter store');
         $this->addArgument(
@@ -53,7 +53,7 @@ END
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $in, OutputInterface $out)
+    protected function execute(InputInterface $in, OutputInterface $out) : int
     {
         $toRemove = (array) $in->getArgument('credential');
         $cred = $this->client->remove(...$toRemove);
@@ -61,5 +61,7 @@ END
         foreach ($toRemove as $c) {
             $out->writeln(sprintf('removed %s', $c));
         }
+
+        return 0;
     }
 }

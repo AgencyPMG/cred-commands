@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+pushd "$(git rev-parse --show-toplevel)"
+
+i=0
+
+until [ $i -gt 10 ]; do
+    if [ -f var/localstack/localstack_ready ]; then
+        exit 0
+    fi
+
+    echo "waiting for localstack..."
+    sleep "$i"
+    ((++i))
+done
+
+echo "localstack did not start in time!"
+exit 1

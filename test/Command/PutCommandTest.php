@@ -28,7 +28,7 @@ class PutCommandTest extends CommandTestCase
         ]);
 
         $this->assertSame(0, $status);
-        $this->assertContains(
+        $this->assertStringContainsStringIgnoringCase(
             sprintf('put %s: version 1', self::CREDENTIAL),
             $tester->getDisplay()
         );

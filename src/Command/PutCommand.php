@@ -29,7 +29,7 @@ final class PutCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Put a credential into the parameter store');
         $this->addArgument(
@@ -59,7 +59,7 @@ END
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $in, OutputInterface $out)
+    protected function execute(InputInterface $in, OutputInterface $out) : int
     {
         $ver = $this->client->put(
             $in->getArgument('credential'),
@@ -71,5 +71,7 @@ END
             $in->getArgument('credential'),
             $ver
         ));
+
+        return 0;
     }
 }

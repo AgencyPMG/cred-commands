@@ -1,0 +1,12 @@
+version: '2.1'
+
+services:
+  localstack:
+    image: localstack/localstack:0.12.19
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=ssm
+    volumes:
+      - ./var/localstack:/tmp/localstack
+      - ./docker/localstack/initaws.d:/docker-entrypoint-initaws.d

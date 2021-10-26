@@ -23,7 +23,7 @@ abstract class CommandTestCase extends \PMG\CredCommands\TestCase
 
     protected $client, $app;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->client = $this->createMock(CredentialClient::class);
         $this->app = new Application($this->client);
