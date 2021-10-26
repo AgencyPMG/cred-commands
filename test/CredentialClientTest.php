@@ -24,23 +24,22 @@ use PMG\CredCommands\Formatter\AppEnvFormatter;
  */
 class CredentialClientTest extends TestCase
 {
-    const PARAM = 'testparam';
-
     private $ssm, $client;
 
     public function testParamtersCanBePutRetrievedAndRemoved()
     {
-        $ver = $this->client->put(self::PARAM, 'testing123');
+        $paramName = __FUNCTION__;
+        $ver = $this->client->put($paramName, 'testing123');
         $this->assertGreaterThan(0, $ver);
 
-        $cred = $this->client->get(self::PARAM);
+        $cred = $this->client->get($paramName);
         $this->assertSame('testing123', $cred);
 
-        $this->client->remove(self::PARAM);
+        $this->client->remove($paramName);
 
         $e = null;
         try {
-            $this->client->get(self::PARAM);
+            $this->client->get($paramName);
         } catch (SsmException $e) {
             $this->assertEquals('ParameterNotFound', $e->getAwsErrorCode());
         }
@@ -49,30 +48,37 @@ class CredentialClientTest extends TestCase
 
     public function testMultiParametersCanBeRecieved()
     {
-        $this->client->put(self::PARAM, 'testing123');
-        $this->client->put(self::PARAM.'_again', 'testing234');
+        $paramOne = __FUNCTION__;
+        $paramTwo = __FUNCTION__.'_again';
+        $this->client->put($paramOne, 'testing123');
+        $this->client->put($paramTwo, 'testing234');
 
-        $creds = $this->client->getMultiple(self::PARAM, self::PARAM.'_again');
+        $creds = $this->client->getMultiple($paramOne, $paramTwo);
 
         $this->assertCount(2, $creds);
         $this->assertEquals([
-            self::PARAM => 'testing123',
-            self::PARAM.'_again' => 'testing234',
+            $paramOne => 'testing123',
+            $paramTwo => 'testing234',
         ], $creds);
 
-        $this->client->remove(self::PARAM, self::PARAM.'_again');
+        $this->client->remove($paramOne, $paramTwo);
     }
 
     /**
      * @group https://github.com/AgencyPMG/cred-commands/issues/3
+     * @group slow
      */
     public function testMoreThanTenParametersCanBeRecievedAndRemoved()
     {
         $names = [];
         $value = bin2hex(random_bytes(4));
         foreach(range(1, 15) as $i) {
-            $names[] = $name = self::PARAM.'_multi_'.$i;
+            $names[] = $name = __FUNCTION__.$i;
             $this->client->put($name, $value);
+            // slow down our requests a bit so we don't rate limit ourselves.
+            if (0 === ($i % 2)) {
+                sleep(1);
+            }
         }
 
         $creds = $this->client->getMultiple(...$names);
@@ -86,7 +92,7 @@ class CredentialClientTest extends TestCase
     public function testGettingMultipleParametersWithInvalidParamsCausesError()
     {
         $this->expectException(InvalidParameters::class);
-        $this->client->getMultiple(self::PARAM.'_does_not_exist');
+        $this->client->getMultiple(__FUNCTION__);
     }
 
     protected function setUp() : void
