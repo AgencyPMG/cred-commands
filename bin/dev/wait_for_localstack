@@ -4,7 +4,7 @@ pushd "$(git rev-parse --show-toplevel)"
 
 i=0
 
-until [ $i -gt 5 ]; do
+until [ $i -gt 10 ]; do
     if [ -f var/localstack/localstack_ready ]; then
         exit 0
     fi
