@@ -46,8 +46,8 @@ class MultiGetCommandTest extends CommandTestCase
 
         $this->assertSame(0, $status);
         foreach ($creds as $key => $cred) {
-            $this->assertContains($key, $tester->getDisplay());
-            $this->assertContains($cred, $tester->getDisplay());
+            $this->assertStringContainsStringIgnoringCase($key, $tester->getDisplay());
+            $this->assertStringContainsStringIgnoringCase($cred, $tester->getDisplay());
         }
     }
 

@@ -29,7 +29,7 @@ final class GetCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Get a credential from the parameter store');
         $this->addArgument(
@@ -57,10 +57,12 @@ END
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $in, OutputInterface $out)
+    protected function execute(InputInterface $in, OutputInterface $out) : int
     {
         $cred = $this->client->get($in->getArgument('credential'));
 
         $out->write($cred, false, OutputInterface::OUTPUT_RAW);
+
+        return 0;
     }
 }

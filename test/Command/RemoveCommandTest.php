@@ -26,7 +26,7 @@ class RemoveCommandTest extends CommandTestCase
         ]);
 
         $this->assertSame(0, $status);
-        $this->assertContains(
+        $this->assertStringContainsStringIgnoringCase(
             sprintf('removed %s', self::CREDENTIAL),
             $tester->getDisplay()
         );
@@ -43,11 +43,11 @@ class RemoveCommandTest extends CommandTestCase
         ]);
 
         $this->assertSame(0, $status);
-        $this->assertContains(
+        $this->assertStringContainsStringIgnoringCase(
             sprintf('removed %s', self::CREDENTIAL),
             $tester->getDisplay()
         );
-        $this->assertContains(
+        $this->assertStringContainsStringIgnoringCase(
             sprintf('removed %s', 'another_cred'),
             $tester->getDisplay()
         );

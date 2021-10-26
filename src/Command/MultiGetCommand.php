@@ -40,7 +40,7 @@ final class MultiGetCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Get one or more credentials from the parameter store');
         $this->addArgument(
@@ -76,13 +76,15 @@ END
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $in, OutputInterface $out)
+    protected function execute(InputInterface $in, OutputInterface $out) : int
     {
         $format = self::ensureValidFormat($in->getOption('format'));
         $toGet = (array) $in->getArgument('credential');
         $creds = $this->client->getMultiple(...$toGet);
 
         $out->write(self::formatCredentials($format, $creds), true, OutputInterface::OUTPUT_RAW);
+
+        return 0;
     }
 
     private static function ensureValidFormat(string $format) : string

@@ -89,11 +89,12 @@ class CredentialClientTest extends TestCase
         $this->client->getMultiple(self::PARAM.'_does_not_exist');
     }
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $key = getenv('CREDCOMMANDS_KEY_ID');
         if (false === $key) {
-            return $this->markTestSkipped('No `CREDCOMMANDS_KEY_ID` in the environment');
+            $this->markTestSkipped('No `CREDCOMMANDS_KEY_ID` in the environment');
+            return;
         }
 
         // assume we have creds available
