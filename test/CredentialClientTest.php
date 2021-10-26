@@ -24,6 +24,9 @@ use PMG\CredCommands\Formatter\AppEnvFormatter;
  */
 class CredentialClientTest extends TestCase
 {
+    private const LOCALSTACK_ENDPOINT = 'http://localhost:4566';
+    private const KEY_ALIAS = 'alias/ignored-by-localstack';
+
     private $ssm, $client;
 
     public function testParamtersCanBePutRetrievedAndRemoved()
@@ -75,10 +78,6 @@ class CredentialClientTest extends TestCase
         foreach(range(1, 15) as $i) {
             $names[] = $name = __FUNCTION__.$i;
             $this->client->put($name, $value);
-            // slow down our requests a bit so we don't rate limit ourselves.
-            if (0 === ($i % 2)) {
-                sleep(1);
-            }
         }
 
         $creds = $this->client->getMultiple(...$names);
@@ -97,21 +96,19 @@ class CredentialClientTest extends TestCase
 
     protected function setUp() : void
     {
-        $key = getenv('CREDCOMMANDS_KEY_ID');
-        if (false === $key) {
-            $this->markTestSkipped('No `CREDCOMMANDS_KEY_ID` in the environment');
-            return;
-        }
-
-        // assume we have creds available
         $this->ssm = SsmClient::factory([
             'version' => 'latest',
-            'region' => getenv('AWS_DEFAULT_REGION') ?: 'us-east-1',
+            'region' => 'us-east-1',
+            'endpoint' => self::LOCALSTACK_ENDPOINT,
+            'credentials' => [
+                'key' => 'ignoredByLocalstack',
+                'secret' => 'ignoredByLocalstack',
+            ],
         ]);
         $this->client = new CredentialClient(
             $this->ssm,
             new AppEnvFormatter('credcommands', 'test'),
-            $key
+            self::KEY_ALIAS
         );
     }
 }
