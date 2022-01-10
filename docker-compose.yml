@@ -2,7 +2,7 @@ version: '2.1'
 
 services:
   localstack:
-    image: localstack/localstack:0.12.19
+    image: localstack/localstack:0.13.2
     ports:
       - "4566:4566"
     environment:
