@@ -1,3 +1,11 @@
+# Deprecated!
+
+This library came into existence to help manage secrets in AWS's ECS as
+described [here](https://chrisguitarguy.com/2017/12/23/secrets-in-dockerized-applications/).
+
+This was before ECS had support for [secrets](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/specifying-sensitive-data.html)
+and now that it does, PMG no longer uses these commands.
+
 # pmg/cred-commands
 
 These are a set of symfony console commands that interact with the
